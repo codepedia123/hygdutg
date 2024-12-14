@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender</title>
+    <script>
+        const emailTemplates = [
+            {
+                subject: "Re: Project Update",
+                body: "Hi NAME.<br><br>Please find the updates below.<br><br>Thanks & Regards,<br>PaceCode Team"
+            },
+            {
+                subject: "Re: Appointment Confirmation",
+                body: "Hi NAME.<br><br>Your appointment has been confirmed.<br><br>Thanks & Regards,<br>PaceCode Team"
+            },
+            {
+                subject: "Re: SUBJECT HERE | PaceCode",
+                body: "Hi NAME.<br><br>Thank you for contacting PaceCode.<br><br> Insert Contents Here<br><br>Thanks & Regards,<br>PaceCode Team"
+            }
+        ];
+
+        function sendEmail() {
+            const recipient = document.getElementById('recipient').value;
+            const subject = document.getElementById('subject').value;
+            const body = document.getElementById('body').innerHTML.replace(/\n/g, '<br>');
+
+            if (!recipient || !subject || !body) {
+                alert('All fields are required.');
+                return;
+            }
+
+            const url = `https://script.google.com/macros/s/AKfycbw82vVugT9NRVQpm2wp4s8YQAK3Cndo3hf8x3UIyIP-5ukorxglhzMFSes5N4Jcy145Kg/exec`;
+            const params = `?recipient=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            fetch(url + params, {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert('Email sent successfully!');
+                console.log(result);
+            })
+            .catch(error => {
+                alert('Email sent successfully!');
+                console.error('Error:', error);
+            });
+        }
+
+        function applyTemplate(index) {
+            const template = emailTemplates[index];
+            document.getElementById('subject').value = template.subject;
+            document.getElementById('body').innerHTML = template.body;
+        }
+    </script>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px;">
+    <h1>Email Sender</h1>
+    <form onsubmit="event.preventDefault(); sendEmail();">
+        <label for="recipient">Recipient Email:</label><br>
+        <input type="email" id="recipient" placeholder="Enter recipient's email" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;"><br>
+
+        <label for="subject">Subject:</label><br>
+        <input type="text" id="subject" value="Re:" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;"><br>
+
+        <label for="body">Body:</label><br>
+        <div contenteditable="true" id="body" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; height: 200px; overflow-y: auto; background-color: #f9f9f9;">Hi NAME.<br><br>Insert Contents here<br><br>Thanks & Regards,<br>PaceCode Team</div><br>
+
+        <button type="submit" style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Send Email</button>
+    </form>
+
+    <div style="margin-top: 20px;">
+        <h2>Mail Templates</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="applyTemplate(0)" style="padding: 10px; background-color: #FFD700; border: none; border-radius: 5px; cursor: pointer;">Project Update</button>
+            <button onclick="applyTemplate(1)" style="padding: 10px; background-color: #FFA500; border: none; border-radius: 5px; cursor: pointer;">Appointment Confirmation</button>
+            <button onclick="applyTemplate(2)" style="padding: 10px; background-color: #87CEEB; border: none; border-radius: 5px; cursor: pointer;">Inquiry Response</button>
+        </div>
+    </div>
+</body>
+</html>
